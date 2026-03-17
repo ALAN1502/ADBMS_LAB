@@ -1,0 +1,1207 @@
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~/Desktop$ sudo mysql
+[sudo] password for mca: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.45-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create table persons(personid int primary key,name varchar(10) not null,aaadhar varchar(20) not null unique,age int check (age>18));
+ERROR 1046 (3D000): No database selected
+mysql> create database college;
+ERROR 1007 (HY000): Can't create database 'college'; database exists
+mysql> create database man;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use man;
+Database changed
+mysql> create table persons(personid int primary key,name varchar(10) not null,aaadhar varchar(20) not null unique,age int check (age>18));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table order(orderid int primary key,orderno int not null,personid int foreign key(personid) reference persons(personid));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order(orderid int primary key,orderno int not null,personid int foreign key(pers' at line 1
+mysql> create table order(orderid int primary key,orderno int not null,personid
+int foreign key(personid) Reference persons(personid));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order(orderid int primary key,orderno int not null,personid int foreign key(pers' at line 1
+mysql> create table order(orderid int primary key,orderno int not null,personid
+int foreign key(personid) Reference persons(personid));^C
+mysql> CREATE TABLE orders (
+    ->     orderid INT PRIMARY KEY,
+    ->     orderno INT NOT NULL,
+    ->     personid INT,
+    ->     FOREIGN KEY (personid) REFERENCES persons(personid)
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> desc persons;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| personid | int         | NO   | PRI | NULL    |       |
+| name     | varchar(10) | NO   |     | NULL    |       |
+| aaadhar  | varchar(20) | NO   | UNI | NULL    |       |
+| age      | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.01 sec)
+
+mysql> desc order;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order' at line 1
+mysql> desc orders;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| orderid  | int  | NO   | PRI | NULL    |       |
+| orderno  | int  | NO   |     | NULL    |       |
+| personid | int  | YES  | MUL | NULL    |       |
++----------+------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table employee add primary key (emp_no);
+ERROR 1146 (42S02): Table 'man.employee' doesn't exist
+mysql> create database prev;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use prev;
+Database changed
+mysql> create table employee(emp_no int(10),emp_name varchar(15),place varchar(15),ph_no int(10),dept_name varchar(15),job_id int(10),salary int(15));
+Query OK, 0 rows affected, 4 warnings (0.05 sec)
+
+mysql> create table department(dept_no int (20),emp_no int(18),emp_name varchar(20));
+Query OK, 0 rows affected, 2 warnings (0.05 sec)
+
+mysql> alter table employee add primary key (emp_no);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table department add primary key (dept_no);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employee add FOREIGN KEY (dept_no) REFERENCES department(dept_no) on delete cascade;
+ERROR 1072 (42000): Key column 'dept_no' doesn't exist in table
+mysql> alter table employee add FOREIGN KEY (dept_no) REFERENCES department(dept_no) on DELETE CASCADE;
+ERROR 1072 (42000): Key column 'dept_no' doesn't exist in table
+mysql>  alter table employee add FOREIGN KEY (dept_no) REFERENCES department(dept_no) on delete cascade;
+ERROR 1072 (42000): Key column 'dept_no' doesn't exist in table
+mysql>  alter table employee add FOREIGN KEY (dept_no) REFERENCES department(dept_no) on delete cascade;
+ERROR 1072 (42000): Key column 'dept_no' doesn't exist in table
+mysql> ALTER TABLE employee
+    -> ADD CONSTRAINT fk_employee_department
+    -> FOREIGN KEY (dept_no)
+    -> REFERENCES department(dept_no)
+    -> ON DELETE CASCADE;
+ERROR 1072 (42000): Key column 'dept_no' doesn't exist in table
+mysql> DESC DEPARTMENT;
+ERROR 1146 (42S02): Table 'prev.DEPARTMENT' doesn't exist
+mysql> desc department;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dept_no  | int         | NO   | PRI | NULL    |       |
+| emp_no   | int         | YES  |     | NULL    |       |
+| emp_name | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc employee;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| emp_no    | int         | NO   | PRI | NULL    |       |
+| emp_name  | varchar(15) | YES  |     | NULL    |       |
+| place     | varchar(15) | YES  |     | NULL    |       |
+| ph_no     | int         | YES  |     | NULL    |       |
+| dept_name | varchar(15) | YES  |     | NULL    |       |
+| job_id    | int         | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> alter table employee add dept_no int(10);
+Query OK, 0 rows affected, 1 warning (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> ALTER TABLE employee ADD CONSTRAINT fk_employee_department FOREIGN KEY (dept_no) REFERENCES department(dept_no) ON DELETE CASCADE;
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employee;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| emp_no    | int         | NO   | PRI | NULL    |       |
+| emp_name  | varchar(15) | YES  |     | NULL    |       |
+| place     | varchar(15) | YES  |     | NULL    |       |
+| ph_no     | int         | YES  |     | NULL    |       |
+| dept_name | varchar(15) | YES  |     | NULL    |       |
+| job_id    | int         | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| dept_no   | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> desc department;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dept_no  | int         | NO   | PRI | NULL    |       |
+| emp_no   | int         | YES  |     | NULL    |       |
+| emp_name | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc persons;
+ERROR 1146 (42S02): Table 'prev.persons' doesn't exist
+mysql> desc employee;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| emp_no    | int         | NO   | PRI | NULL    |       |
+| emp_name  | varchar(15) | YES  |     | NULL    |       |
+| place     | varchar(15) | YES  |     | NULL    |       |
+| ph_no     | int         | YES  |     | NULL    |       |
+| dept_name | varchar(15) | YES  |     | NULL    |       |
+| job_id    | int         | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| dept_no   | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> alter table orders drop primary key;
+ERROR 1146 (42S02): Table 'prev.orders' doesn't exist
+mysql> CREATE TABLE orders (     orderid INT PRIMARY KEY,     orderno INT NOT NULL,     personid INT,     FOREIGN KEY (personid) REFERENCES persons(personid) ); 
+ERROR 1824 (HY000): Failed to open the referenced table 'persons'
+mysql> create database man;
+ERROR 1007 (HY000): Can't create database 'man'; database exists
+mysql> create database test;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> CREATE TABLE orders (     orderid INT PRIMARY KEY,     orderno INT NOT NULL,     personid INT,     FOREIGN KEY (personid) REFERENCES persons(personid) ); 
+ERROR 1824 (HY000): Failed to open the referenced table 'persons'
+mysql> create table persons(personid int primary key,name varchar(10) not null,aaadhar varchar(20) not null unique,age int check (age>18));
+Query OK, 0 rows affected (0.05 sec)
+
+mysql>  CREATE TABLE orders (
+    ->     ->     orderid INT PRIMARY KEY,
+    ->     ->     orderno INT NOT NULL,
+    ->     ->     personid INT,
+    ->     ->     FOREIGN KEY (personid) REFERENCES persons(personid)
+    ->     -> );
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '->     orderid INT PRIMARY KEY,
+    ->     orderno INT NOT NULL,
+    ->     pers' at line 2
+mysql> CREATE TABLE orders (
+    ->     orderid INT PRIMARY KEY,
+    ->     orderno INT NOT NULL,
+    ->     personid INT,
+    ->     FOREIGN KEY (personid) REFERENCES persons(personid)
+    -> );
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> desc persons;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| personid | int         | NO   | PRI | NULL    |       |
+| name     | varchar(10) | NO   |     | NULL    |       |
+| aaadhar  | varchar(20) | NO   | UNI | NULL    |       |
+| age      | int         | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc orders;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| orderid  | int  | NO   | PRI | NULL    |       |
+| orderno  | int  | NO   |     | NULL    |       |
+| personid | int  | YES  | MUL | NULL    |       |
++----------+------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table employee(emp_no int(10),emp_name varchar(15),place varchar(15),ph_no int(10),dept_name varchar(15),job_id int(10),salary int(15));
+ERROR 1050 (42S01): Table 'employee' already exists
+mysql> create table employe(emp_no int(10),emp_name varchar(15),place varchar(15),ph_no int(10),dept_name varchar(15),job_id int(10),salary int(15));
+Query OK, 0 rows affected, 4 warnings (0.04 sec)
+
+mysql> create table dept(dept_no int (20),emp_no int(18),emp_name varchar(20));
+Query OK, 0 rows affected, 2 warnings (0.05 sec)
+
+mysql> alter table employe add primary key (emp_no);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table dept add primary key (dept_no);
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employe add dept_no int(10);
+Query OK, 0 rows affected, 1 warning (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> ALTER TABLE employe ADD CONSTRAINT fk_employe_dept FOREIGN KEY (dept_no)
+REFERENCES dept(dept_no) ON DELETE CASCADE;
+Query OK, 0 rows affected (0.12 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table orders drop primary key;
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc orders;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| orderid  | int  | NO   |     | NULL    |       |
+| orderno  | int  | NO   |     | NULL    |       |
+| personid | int  | YES  | MUL | NULL    |       |
++----------+------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc employe;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| emp_no    | int         | NO   | PRI | NULL    |       |
+| emp_name  | varchar(15) | YES  |     | NULL    |       |
+| place     | varchar(15) | YES  |     | NULL    |       |
+| ph_no     | int         | YES  |     | NULL    |       |
+| dept_name | varchar(15) | YES  |     | NULL    |       |
+| job_id    | int         | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| dept_no   | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> desc dept;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dept_no  | int         | NO   | PRI | NULL    |       |
+| emp_no   | int         | YES  |     | NULL    |       |
+| emp_name | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into employe values(emp01,'A','manager'dp01,45000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dp01,45000)' at line 1
+mysql> INSERT INTO employee
+    -> VALUES (1, 'A', 'Delhi', 9876543210, 'HR', 101, 45000, 10);
+ERROR 1264 (22003): Out of range value for column 'ph_no' at row 1
+mysql> alter table employe modify column ph_no varchar(20);
+Query OK, 0 rows affected (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO employee VALUES (1, 'A', 'Delhi', 9876543210, 'HR', 101, 45000, 10);
+ERROR 1264 (22003): Out of range value for column 'ph_no' at row 1
+mysql> INSERT INTO employe VALUES (1, 'A', 'Delhi', 9876543210, 'HR', 101, 45000, 10);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`prev`.`employe`, CONSTRAINT `fk_employe_dept` FOREIGN KEY (`dept_no`) REFERENCES `dept` (`dept_no`) ON DELETE CASCADE)
+mysql> alter table employe modify column ph_no int(20);
+Query OK, 0 rows affected, 1 warning (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> INSERT INTO employe VALUES (1, 'A', 'Delhi', 9876543210, 'HR', 101, 45000, 10);
+ERROR 1264 (22003): Out of range value for column 'ph_no' at row 1
+mysql> alter table employe modify column ph_no bigint(20);
+Query OK, 0 rows affected, 1 warning (0.09 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+
+mysql> INSERT INTO employe VALUES (1, 'A', 'Delhi', 9876543210, 'HR', 101, 45000, 10);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`prev`.`employe`, CONSTRAINT `fk_employe_dept` FOREIGN KEY (`dept_no`) REFERENCES `dept` (`dept_no`) ON DELETE CASCADE)
+mysql> select * from dept;
+Empty set (0.00 sec)
+
+mysql> desc dept;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dept_no  | int         | NO   | PRI | NULL    |       |
+| emp_no   | int         | YES  |     | NULL    |       |
+| emp_name | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table employe drop job_id and drop place;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'and drop place' at line 1
+mysql> alter table employe drop job_id;
+Query OK, 0 rows affected (0.07 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employe drop place;;
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+ERROR: 
+No query specified
+
+mysql> alter table employe drop place;
+ERROR 1091 (42000): Can't DROP 'place'; check that column/key exists
+mysql> alter table employe drop dept_name;
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employe;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| emp_no   | int         | NO   | PRI | NULL    |       |
+| emp_name | varchar(15) | YES  |     | NULL    |       |
+| ph_no    | bigint      | YES  |     | NULL    |       |
+| salary   | int         | YES  |     | NULL    |       |
+| dept_no  | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc dept;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dept_no  | int         | NO   | PRI | NULL    |       |
+| emp_no   | int         | YES  |     | NULL    |       |
+| emp_name | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> alter table employe add column designation varchar(20);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc employe;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | int         | NO   | PRI | NULL    |       |
+| emp_name    | varchar(15) | YES  |     | NULL    |       |
+| ph_no       | bigint      | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| dept_no     | int         | YES  | MUL | NULL    |       |
+| designation | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> alter table dept drop emp_no;
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table dept drop emp_name;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into dept values(101);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into dept values(102);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into dept values(103);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into dept values(104);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into dept values(105);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into dept values(106);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into dept values(107);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dept values(108);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into dept values(109);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into dept values(110);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> desc dept;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| dept_no | int  | NO   | PRI | NULL    |       |
++---------+------+------+-----+---------+-------+
+1 row in set (0.00 sec)
+
+mysql> select * from dept;
++---------+
+| dept_no |
++---------+
+|     101 |
+|     102 |
+|     103 |
+|     104 |
+|     105 |
+|     106 |
+|     107 |
+|     108 |
+|     109 |
+|     110 |
++---------+
+10 rows in set (0.00 sec)
+
+mysql> desc employe;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | int         | NO   | PRI | NULL    |       |
+| emp_name    | varchar(15) | YES  |     | NULL    |       |
+| ph_no       | bigint      | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| dept_no     | int         | YES  | MUL | NULL    |       |
+| designation | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> insert into employe values(1,'aa',1111111111,50000,101,'manager');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employe values(2,'bb',222222222,25000,102,'analyst');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employe values(3,'cc',3333333333,27000,103,'cashier');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employe values(4,'dd',4444444444,37000,103,'manager');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employe values(5,'ee',5555555555,32000,104,'trainee');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employe values(6,'ff',6666666666,18000,105,'trainee');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employe values(7,'gg',7777777777,43000,106,'hr');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into employe values(8,'hh',8888888888,33000,106,'assistant');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into employe values(9,'ii',9999999999,45000,109,'analyst');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> 
+[1]+  Stopped                 sudo mysql
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~/Desktop$ sudo mysql
+[sudo] password for mca: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.45-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use man;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++---------------+
+| Tables_in_man |
++---------------+
+| orders        |
+| persons       |
++---------------+
+2 rows in set (0.00 sec)
+
+mysql> use prev;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_prev |
++----------------+
+| department     |
+| dept           |
+| employe        |
+| employee       |
+| orders         |
+| persons        |
++----------------+
+6 rows in set (0.00 sec)
+
+mysql> desc employe;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | int         | NO   | PRI | NULL    |       |
+| emp_name    | varchar(15) | YES  |     | NULL    |       |
+| ph_no       | bigint      | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| dept_no     | int         | YES  | MUL | NULL    |       |
+| designation | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> update employe set dept_no=107;
+Query OK, 9 rows affected (0.01 sec)
+Rows matched: 9  Changed: 9  Warnings: 0
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 1111111111 |  50000 |     107 | manager     |
+|      2 | bb       |  222222222 |  25000 |     107 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     107 | cashier     |
+|      4 | dd       | 4444444444 |  37000 |     107 | manager     |
+|      5 | ee       | 5555555555 |  32000 |     107 | trainee     |
+|      6 | ff       | 6666666666 |  18000 |     107 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      8 | hh       | 8888888888 |  33000 |     107 | assistant   |
+|      9 | ii       | 9999999999 |  45000 |     107 | analyst     |
++--------+----------+------------+--------+---------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> update employe set dept_no=107 where name='gg';
+ERROR 1054 (42S22): Unknown column 'name' in 'where clause'
+mysql> update employe set dept_no=107 where emp_name='gg';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 1111111111 |  50000 |     107 | manager     |
+|      2 | bb       |  222222222 |  25000 |     107 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     107 | cashier     |
+|      4 | dd       | 4444444444 |  37000 |     107 | manager     |
+|      5 | ee       | 5555555555 |  32000 |     107 | trainee     |
+|      6 | ff       | 6666666666 |  18000 |     107 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      8 | hh       | 8888888888 |  33000 |     107 | assistant   |
+|      9 | ii       | 9999999999 |  45000 |     107 | analyst     |
++--------+----------+------------+--------+---------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> update employe set dept_no=101 where emp_name='aa';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 1111111111 |  50000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     107 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     107 | cashier     |
+|      4 | dd       | 4444444444 |  37000 |     107 | manager     |
+|      5 | ee       | 5555555555 |  32000 |     107 | trainee     |
+|      6 | ff       | 6666666666 |  18000 |     107 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      8 | hh       | 8888888888 |  33000 |     107 | assistant   |
+|      9 | ii       | 9999999999 |  45000 |     107 | analyst     |
++--------+----------+------------+--------+---------+-------------+
+9 rows in set (0.00 sec)
+
+mysql> update employe set dept_no=102 where emp_name='bb';
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set dept_no=103 where emp_name='cc';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set dept_no=104 where emp_name='dd';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set dept_no=105 where emp_name='ee';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set dept_no=106 where emp_name='ff';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set dept_no=107 where emp_name='gg';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> update employe set dept_no=108 where emp_name='hh';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set dept_no=109 where emp_name='ii';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> insert into employe values(10,'jj',1010101010,40000,110,'manager');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 1111111111 |  50000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     102 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dd       | 4444444444 |  37000 |     104 | manager     |
+|      5 | ee       | 5555555555 |  32000 |     105 | trainee     |
+|      6 | ff       | 6666666666 |  18000 |     106 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      8 | hh       | 8888888888 |  33000 |     108 | assistant   |
+|      9 | ii       | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jj       | 1010101010 |  40000 |     110 | manager     |
++--------+----------+------------+--------+---------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> select emp_no,emp_name from employe where dept_no=102;
++--------+----------+
+| emp_no | emp_name |
++--------+----------+
+|      2 | bb       |
++--------+----------+
+1 row in set (0.00 sec)
+
+mysql> select emp_no,emp_name from employe where salary between 20000 and 50000;
++--------+----------+
+| emp_no | emp_name |
++--------+----------+
+|      1 | aa       |
+|      2 | bb       |
+|      3 | cc       |
+|      4 | dd       |
+|      5 | ee       |
+|      7 | gg       |
+|      8 | hh       |
+|      9 | ii       |
+|     10 | jj       |
++--------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select distinct designation from employe;
++-------------+
+| designation |
++-------------+
+| manager     |
+| analyst     |
+| cashier     |
+| trainee     |
+| hr          |
+| assistant   |
++-------------+
+6 rows in set (0.00 sec)
+
+mysql> update employe set ph_no=9633309860 where emp_name='aa';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 9633309860 |  50000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     102 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dd       | 4444444444 |  37000 |     104 | manager     |
+|      5 | ee       | 5555555555 |  32000 |     105 | trainee     |
+|      6 | ff       | 6666666666 |  18000 |     106 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      8 | hh       | 8888888888 |  33000 |     108 | assistant   |
+|      9 | ii       | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jj       | 1010101010 |  40000 |     110 | manager     |
++--------+----------+------------+--------+---------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> update employe set salary=45000 whose designation='manager';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'whose designation='manager'' at line 1
+mysql> update employe set salary=45000 where designation='manager';
+Query OK, 3 rows affected (0.00 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     102 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dd       | 4444444444 |  45000 |     104 | manager     |
+|      5 | ee       | 5555555555 |  32000 |     105 | trainee     |
+|      6 | ff       | 6666666666 |  18000 |     106 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      8 | hh       | 8888888888 |  33000 |     108 | assistant   |
+|      9 | ii       | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jj       | 1010101010 |  45000 |     110 | manager     |
++--------+----------+------------+--------+---------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> update employe set salary=33000 where emp_name='ee';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     102 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dd       | 4444444444 |  45000 |     104 | manager     |
+|      5 | ee       | 5555555555 |  33000 |     105 | trainee     |
+|      6 | ff       | 6666666666 |  18000 |     106 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      8 | hh       | 8888888888 |  33000 |     108 | assistant   |
+|      9 | ii       | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jj       | 1010101010 |  45000 |     110 | manager     |
++--------+----------+------------+--------+---------+-------------+
+10 rows in set (0.00 sec)
+
+mysql> delete from employe where salary=33000;
+Query OK, 2 rows affected (0.03 sec)
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     102 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dd       | 4444444444 |  45000 |     104 | manager     |
+|      6 | ff       | 6666666666 |  18000 |     106 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      9 | ii       | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jj       | 1010101010 |  45000 |     110 | manager     |
++--------+----------+------------+--------+---------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> 
+
+ysql> use prev;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> desc employe;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | int         | NO   | PRI | NULL    |       |
+| emp_name    | varchar(15) | YES  |     | NULL    |       |
+| ph_no       | bigint      | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| dept_no     | int         | YES  | MUL | NULL    |       |
+| designation | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> desc dept;
++---------+------+------+-----+---------+-------+
+| Field   | Type | Null | Key | Default | Extra |
++---------+------+------+-----+---------+-------+
+| dept_no | int  | NO   | PRI | NULL    |       |
++---------+------+------+-----+---------+-------+
+1 row in set (0.00 sec)
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | aa       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     102 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dd       | 4444444444 |  45000 |     104 | manager     |
+|      6 | ff       | 6666666666 |  18000 |     106 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      9 | ii       | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jj       | 1010101010 |  45000 |     110 | manager     |
++--------+----------+------------+--------+---------+-------------+
+8 rows in set (0.02 sec)
+
+mysql> select * from dept;
++---------+
+| dept_no |
++---------+
+|     101 |
+|     102 |
+|     103 |
+|     104 |
+|     105 |
+|     106 |
+|     107 |
+|     108 |
+|     109 |
+|     110 |
++---------+
+10 rows in set (0.02 sec)
+
+mysql> select emp_name,ph_no from employe where emp_name like 'a%';
++----------+------------+
+| emp_name | ph_no      |
++----------+------------+
+| aa       | 9633309860 |
++----------+------------+
+1 row in set (0.00 sec)
+
+mysql> update employe set emp_name='alan' where emp_name='aa';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> desc employe;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | int         | NO   | PRI | NULL    |       |
+| emp_name    | varchar(15) | YES  |     | NULL    |       |
+| ph_no       | bigint      | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| dept_no     | int         | YES  | MUL | NULL    |       |
+| designation | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employe;
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | alan     | 9633309860 |  45000 |     101 | manager     |
+|      2 | bb       |  222222222 |  25000 |     102 | analyst     |
+|      3 | cc       | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dd       | 4444444444 |  45000 |     104 | manager     |
+|      6 | ff       | 6666666666 |  18000 |     106 | trainee     |
+|      7 | gg       | 7777777777 |  43000 |     107 | hr          |
+|      9 | ii       | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jj       | 1010101010 |  45000 |     110 | manager     |
++--------+----------+------------+--------+---------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> update employe set emp_name='bibin' where emp_name='bb';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set emp_name='chris' where emp_name='cc';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set emp_name='dervin' where emp_name='dd';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set emp_name='felbin' where emp_name='ff';
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set emp_name='garudan' where emp_name='gg';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set emp_name='induchudan' where emp_name='ii';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employe set emp_name='jackson' where emp_name='jj';
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employe;
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin      |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris      | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      6 | felbin     | 6666666666 |  18000 |     106 | trainee     |
+|      7 | garudan    | 7777777777 |  43000 |     107 | hr          |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> select * from employe where length(emp_name>=3 and salary>20000);
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin      |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris      | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      6 | felbin     | 6666666666 |  18000 |     106 | trainee     |
+|      7 | garudan    | 7777777777 |  43000 |     107 | hr          |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+8 rows in set, 8 warnings (0.00 sec)
+
+mysql> select * from employe where length(emp_name>=5 and salary>20000);
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin      |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris      | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      6 | felbin     | 6666666666 |  18000 |     106 | trainee     |
+|      7 | garudan    | 7777777777 |  43000 |     107 | hr          |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+8 rows in set, 8 warnings (0.00 sec)
+
+mysql> select * from employe where length(emp_name>=5 and salary>44000);
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin      |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris      | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      6 | felbin     | 6666666666 |  18000 |     106 | trainee     |
+|      7 | garudan    | 7777777777 |  43000 |     107 | hr          |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+8 rows in set, 8 warnings (0.00 sec)
+
+mysql> select * from employe where length(emp_name>=5 and salary>44000);
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin      |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris      | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      6 | felbin     | 6666666666 |  18000 |     106 | trainee     |
+|      7 | garudan    | 7777777777 |  43000 |     107 | hr          |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+8 rows in set, 8 warnings (0.00 sec)
+
+mysql> select * from employe where length(emp_name>=2 and salary>44000);
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin      |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris      | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      6 | felbin     | 6666666666 |  18000 |     106 | trainee     |
+|      7 | garudan    | 7777777777 |  43000 |     107 | hr          |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+8 rows in set, 8 warnings (0.00 sec)
+
+mysql> select * from employe where emp_no in ('emp 1',emp 2','emp 3');
+    '> select * from employe where emp_no is ('emp 1',emp 2','emp 3');
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2','emp 3');
+select * from employe where emp_no is ('emp 1',emp 2','emp 3')' at line 1
+mysql> select * from employe where emp_no in ('emp 1',emp 2','emp 3');
+select * from employe where emp_no in ('emp 1','emp 2','emp 3');
+    '> '
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '2','emp 3');
+'' at line 1
+mysql> select * from employe where emp_no in ('emp 1',emp 2','emp 3');
+    '> ;
+    '> ;
+    '> ^C
+mysql> desc employe;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| emp_no      | int         | NO   | PRI | NULL    |       |
+| emp_name    | varchar(15) | YES  |     | NULL    |       |
+| ph_no       | bigint      | YES  |     | NULL    |       |
+| salary      | int         | YES  |     | NULL    |       |
+| dept_no     | int         | YES  | MUL | NULL    |       |
+| designation | varchar(20) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> select * from employe where emp_no in ('emp_no 1',emp_no 2','emp_no 3');
+    '> 
+    '> desc employe;
+    '> ^C
+mysql> select * from employe where emp_no in ('1',2','3');
+    '> select * from employe where emp_no in ('1',2','3');^C
+mysql> select * from employe where emp_no in (1,2,3);
++--------+----------+------------+--------+---------+-------------+
+| emp_no | emp_name | ph_no      | salary | dept_no | designation |
++--------+----------+------------+--------+---------+-------------+
+|      1 | alan     | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin    |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris    | 3333333333 |  27000 |     103 | cashier     |
++--------+----------+------------+--------+---------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employe where length(emp_name)>=2 and salary>44000;
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> select em_name,emp_no from employe where salary between 10000 and 35000;
+ERROR 1054 (42S22): Unknown column 'em_name' in 'field list'
+mysql> select emp_name,emp_no from employe where salary between 10000 and 35000;
++----------+--------+
+| emp_name | emp_no |
++----------+--------+
+| bibin    |      2 |
+| chris    |      3 |
+| felbin   |      6 |
++----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select emp_name,emp_no from employe where designation='manager' or designation='analyst'; 
++------------+--------+
+| emp_name   | emp_no |
++------------+--------+
+| alan       |      1 |
+| bibin      |      2 |
+| dervin     |      4 |
+| induchudan |      9 |
+| jackson    |     10 |
++------------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from dept;
++---------+
+| dept_no |
++---------+
+|     101 |
+|     102 |
+|     103 |
+|     104 |
+|     105 |
+|     106 |
+|     107 |
+|     108 |
+|     109 |
+|     110 |
++---------+
+10 rows in set (0.00 sec)
+
+mysql> select * from employe;
++--------+------------+------------+--------+---------+-------------+
+| emp_no | emp_name   | ph_no      | salary | dept_no | designation |
++--------+------------+------------+--------+---------+-------------+
+|      1 | alan       | 9633309860 |  45000 |     101 | manager     |
+|      2 | bibin      |  222222222 |  25000 |     102 | analyst     |
+|      3 | chris      | 3333333333 |  27000 |     103 | cashier     |
+|      4 | dervin     | 4444444444 |  45000 |     104 | manager     |
+|      6 | felbin     | 6666666666 |  18000 |     106 | trainee     |
+|      7 | garudan    | 7777777777 |  43000 |     107 | hr          |
+|      9 | induchudan | 9999999999 |  45000 |     109 | analyst     |
+|     10 | jackson    | 1010101010 |  45000 |     110 | manager     |
++--------+------------+------------+--------+---------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> select dept_no,count(*) as total_employe from employe group by dept_no;
++---------+---------------+
+| dept_no | total_employe |
++---------+---------------+
+|     101 |             1 |
+|     102 |             1 |
+|     103 |             1 |
+|     104 |             1 |
+|     106 |             1 |
+|     107 |             1 |
+|     109 |             1 |
+|     110 |             1 |
++---------+---------------+
+8 rows in set (0.00 sec)
+
+mysql> select dept_no,avg(salary) as avg_salary from employe group by dept_no;
++---------+------------+
+| dept_no | avg_salary |
++---------+------------+
+|     101 | 45000.0000 |
+|     102 | 25000.0000 |
+|     103 | 27000.0000 |
+|     104 | 45000.0000 |
+|     106 | 18000.0000 |
+|     107 | 43000.0000 |
+|     109 | 45000.0000 |
+|     110 | 45000.0000 |
++---------+------------+
+8 rows in set (0.00 sec)
+
+mysql> select dept_no,sum(salary) as total_salary from employe group by dept_no;
++---------+--------------+
+| dept_no | total_salary |
++---------+--------------+
+|     101 |        45000 |
+|     102 |        25000 |
+|     103 |        27000 |
+|     104 |        45000 |
+|     106 |        18000 |
+|     107 |        43000 |
+|     109 |        45000 |
+|     110 |        45000 |
++---------+--------------+
+8 rows in set (0.00 sec)
+
+mysql> select dept_no max(salary) as highest_salary and min(salary) as lowest_salary from employe group by dept_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'max(salary) as highest_salary and min(salary) as lowest_salary from employe grou' at line 1
+mysql> select dept_no max(salary) as highest_salary and min(salary) as lowest_salary from employe group by dept_no;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'max(salary) as highest_salary and min(salary) as lowest_salary from employe grou' at line 1
+mysql> SELECT dept_no,
+    ->        MAX(salary) AS highest_salary,
+    ->        MIN(salary) AS lowest_salary
+    -> FROM employe
+    -> GROUP BY dept_no;
++---------+----------------+---------------+
+| dept_no | highest_salary | lowest_salary |
++---------+----------------+---------------+
+|     101 |          45000 |         45000 |
+|     102 |          25000 |         25000 |
+|     103 |          27000 |         27000 |
+|     104 |          45000 |         45000 |
+|     106 |          18000 |         18000 |
+|     107 |          43000 |         43000 |
+|     109 |          45000 |         45000 |
+|     110 |          45000 |         45000 |
++---------+----------------+---------------+
+8 rows in set (0.00 sec)
+
+mysql> select dept_no,avg(salary) as avg_salary from employe where dept_no<> 101 group by dept_no;
++---------+------------+
+| dept_no | avg_salary |
++---------+------------+
+|     102 | 25000.0000 |
+|     103 | 27000.0000 |
+|     104 | 45000.0000 |
+|     106 | 18000.0000 |
+|     107 | 43000.0000 |
+|     109 | 45000.0000 |
+|     110 | 45000.0000 |
++---------+------------+
+7 rows in set (0.00 sec)
+
+mysql> select dept_no,avg(salary) as avg_salary from employe where dept_no<> 101 group by dept_no having avg(salary)>30000 order by avg_salary asc;
++---------+------------+
+| dept_no | avg_salary |
++---------+------------+
+|     107 | 43000.0000 |
+|     104 | 45000.0000 |
+|     109 | 45000.0000 |
+|     110 | 45000.0000 |
++---------+------------+
+4 rows in set (0.00 sec)
+
+

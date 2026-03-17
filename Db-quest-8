@@ -1,0 +1,316 @@
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~/Desktop$ mongosh
+Current Mongosh Log ID:	69b90d2197fa3652068de665
+Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.10
+MongoNetworkError: connect ECONNREFUSED 127.0.0.1:27017
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~/Desktop$ sudo systemctl start mongod
+[sudo] password for mca: 
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~/Desktop$ mongosh
+Current Mongosh Log ID:	69b90d4ec3a001f8c28de665
+Connecting to:		mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.10
+Using MongoDB:		8.2.2
+Using Mongosh:		2.5.10
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the disableTelemetry() command.
+
+------
+   The server generated these startup warnings when booting
+   2026-03-17T13:43:57.391+05:30: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2026-03-17T13:43:57.469+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2026-03-17T13:43:57.470+05:30: For customers running the current memory allocator, we suggest changing the contents of the following sysfsFile
+   2026-03-17T13:43:57.470+05:30: For customers running the current memory allocator, we suggest changing the contents of the following sysfsFile
+   2026-03-17T13:43:57.470+05:30: We suggest setting the contents of sysfsFile to 0.
+   2026-03-17T13:43:57.470+05:30: We suggest setting swappiness to 0 or 1, as swapping can cause performance problems.
+------
+
+test> create database exp8;
+Uncaught:
+SyntaxError: Missing semicolon. (1:6)
+
+> 1 | create database exp8;
+    |       ^
+  2 |
+
+test> use exp8
+switched to db exp8
+exp8> db.exp8.insertMany([
+... {rollno: 1, name: "Anu", department:"MCA", sem: 2, cgpa: 8.5},
+... {rollno: 2, name: "Rahul", department:"BCA", sem: 3, cgpa: 7.8},
+... {rollno: 3, name: "Meera", department: "MCA", sem: 2, cgpa: 9.1},
+... {rollno: 4, name: "Arjun", department: "Bsc", sem: 1, cgpa: 7.5},
+... {rollno: 5, name: "Neha", department: "MCA", sem: 3, cgpa: 8.9},
+... {rollno: 6, name: "Kiran", department: "BCom", sem: 4, cgpa: 6.8},
+... {rollno: 7, name: "Divya", department: "MCA", sem: 2, cgpa: 8.2},
+... {rollno: 8, name: "Akhil", department: "BCA", sem: 5, cgpa: 7.2},
+... {rollno: 9, name: "Sneha", department: "MCA", sem: 3, cgpa: 9.0},
+... {rollno: 10, name: "Vishnu", department: "BSc", sem: 1, cgpa: 6.9},
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('69b91306c3a001f8c28de666'),
+    '1': ObjectId('69b91306c3a001f8c28de667'),
+    '2': ObjectId('69b91306c3a001f8c28de668'),
+    '3': ObjectId('69b91306c3a001f8c28de669'),
+    '4': ObjectId('69b91306c3a001f8c28de66a'),
+    '5': ObjectId('69b91306c3a001f8c28de66b'),
+    '6': ObjectId('69b91306c3a001f8c28de66c'),
+    '7': ObjectId('69b91306c3a001f8c28de66d'),
+    '8': ObjectId('69b91306c3a001f8c28de66e'),
+    '9': ObjectId('69b91306c3a001f8c28de66f')
+  }
+}
+exp8> db.exp8.find({department: "MCA"})
+[
+  {
+    _id: ObjectId('69b91306c3a001f8c28de666'),
+    rollno: 1,
+    name: 'Anu',
+    department: 'MCA',
+    sem: 2,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de668'),
+    rollno: 3,
+    name: 'Meera',
+    department: 'MCA',
+    sem: 2,
+    cgpa: 9.1
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66a'),
+    rollno: 5,
+    name: 'Neha',
+    department: 'MCA',
+    sem: 3,
+    cgpa: 8.9
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66c'),
+    rollno: 7,
+    name: 'Divya',
+    department: 'MCA',
+    sem: 2,
+    cgpa: 8.2
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66e'),
+    rollno: 9,
+    name: 'Sneha',
+    department: 'MCA',
+    sem: 3,
+    cgpa: 9
+  }
+]
+exp8> db.updateMany(
+... {department: "MCA"},
+... {$set: {semester: 1}}
+... )
+TypeError: db.updateMany is not a function
+exp8> db.student.updateMany(
+...   {department: "MCA"},
+...   {$set: {semester: 1}}
+... )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+exp8> db.exp8.find()
+[
+  {
+    _id: ObjectId('69b91306c3a001f8c28de666'),
+    rollno: 1,
+    name: 'Anu',
+    department: 'MCA',
+    sem: 2,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de667'),
+    rollno: 2,
+    name: 'Rahul',
+    department: 'BCA',
+    sem: 3,
+    cgpa: 7.8
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de668'),
+    rollno: 3,
+    name: 'Meera',
+    department: 'MCA',
+    sem: 2,
+    cgpa: 9.1
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de669'),
+    rollno: 4,
+    name: 'Arjun',
+    department: 'Bsc',
+    sem: 1,
+    cgpa: 7.5
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66a'),
+    rollno: 5,
+    name: 'Neha',
+    department: 'MCA',
+    sem: 3,
+    cgpa: 8.9
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66b'),
+    rollno: 6,
+    name: 'Kiran',
+    department: 'BCom',
+    sem: 4,
+    cgpa: 6.8
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66c'),
+    rollno: 7,
+    name: 'Divya',
+    department: 'MCA',
+    sem: 2,
+    cgpa: 8.2
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66d'),
+    rollno: 8,
+    name: 'Akhil',
+    department: 'BCA',
+    sem: 5,
+    cgpa: 7.2
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66e'),
+    rollno: 9,
+    name: 'Sneha',
+    department: 'MCA',
+    sem: 3,
+    cgpa: 9
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66f'),
+    rollno: 10,
+    name: 'Vishnu',
+    department: 'BSc',
+    sem: 1,
+    cgpa: 6.9
+  }
+]
+exp8> db.student.updateMany(
+...   {department: "MCA"},
+...   {$set: {semester: 1}}
+... 
+... 
+exp8> db.student.updateMany(
+...   {department: "MCA"},
+...   {$set: {sem: 1}}
+... )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+exp8> db.exp8.updateMany( { department: "MCA" }, { $set: { sem: 1 } } )
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 5,
+  modifiedCount: 5,
+  upsertedCount: 0
+}
+exp8> db.exp8.find()
+[
+  {
+    _id: ObjectId('69b91306c3a001f8c28de666'),
+    rollno: 1,
+    name: 'Anu',
+    department: 'MCA',
+    sem: 1,
+    cgpa: 8.5
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de667'),
+    rollno: 2,
+    name: 'Rahul',
+    department: 'BCA',
+    sem: 3,
+    cgpa: 7.8
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de668'),
+    rollno: 3,
+    name: 'Meera',
+    department: 'MCA',
+    sem: 1,
+    cgpa: 9.1
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de669'),
+    rollno: 4,
+    name: 'Arjun',
+    department: 'Bsc',
+    sem: 1,
+    cgpa: 7.5
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66a'),
+    rollno: 5,
+    name: 'Neha',
+    department: 'MCA',
+    sem: 1,
+    cgpa: 8.9
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66b'),
+    rollno: 6,
+    name: 'Kiran',
+    department: 'BCom',
+    sem: 4,
+    cgpa: 6.8
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66c'),
+    rollno: 7,
+    name: 'Divya',
+    department: 'MCA',
+    sem: 1,
+    cgpa: 8.2
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66d'),
+    rollno: 8,
+    name: 'Akhil',
+    department: 'BCA',
+    sem: 5,
+    cgpa: 7.2
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66e'),
+    rollno: 9,
+    name: 'Sneha',
+    department: 'MCA',
+    sem: 1,
+    cgpa: 9
+  },
+  {
+    _id: ObjectId('69b91306c3a001f8c28de66f'),
+    rollno: 10,
+    name: 'Vishnu',
+    department: 'BSc',
+    sem: 1,
+    cgpa: 6.9
+  }
+]
+exp8> 
+

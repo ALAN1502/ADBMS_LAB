@@ -1,0 +1,427 @@
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~/Desktop$ sudo mysql
+[sudo] password for mca: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 11
+Server version: 8.0.45-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database exp6;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use exp6;
+Database changed
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE FindGreatest(
+    ->     IN num1 INT,
+    ->     IN num2 INT,
+    ->     IN num3 INT
+    -> )
+    -> BEGIN
+    ->     DECLARE greatest INT;
+    -> 
+    ->     IF num1 >= num2 AND num1 >= num3 THEN
+    ->         SET greatest = num1;
+    ->     ELSEIF num2 >= num1 AND num2 >= num3 THEN
+    ->         SET greatest = num2;
+    ->     ELSE
+    ->         SET greatest = num3;
+    ->     END IF;
+    -> 
+    ->     SELECT greatest AS Greatest_Number;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> call FindGreatest(10,25,15);
++-----------------+
+| Greatest_Number |
++-----------------+
+|              25 |
++-----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE FindFactorial(
+    -> 
+    -> CREATE PROCEDURE Findfactorial(IN num INT)
+    -> BEGIN 
+    -> 
+Display all 763 possibilities? (y or n) 
+    -> DECLARE i INT DEFAULT 1;
+    -> DECLARE fact BIGINT DEFAULT 1;
+    -> IF num<0 THEN
+    -> SELECT 'Factorial not defined for negative numbers' AS RESULT;
+    -> ELSE
+    -> WHILE i<num DO
+    -> SET fact=fact*i;
+    -> SET i=i+1;
+    -> END WHILE;
+    -> SELECT fact AS Factorial;
+    -> END IF;
+    -> END//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CREATE PROCEDURE Findfactorial(IN num INT)
+BEGIN
+DECLARE i INT DEFAULT 1;
+DECLAR' at line 3
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE FindFactorial(
+    ->     IN num INT
+    -> )
+    -> BEGIN
+    ->     DECLARE i INT DEFAULT 1;
+    ->     DECLARE fact BIGINT DEFAULT 1;
+    -> 
+    ->     IF num < 0 THEN
+    ->         SELECT 'Factorial not defined for negative numbers' AS Result;
+    ->     ELSE
+    ->         WHILE i <= num DO
+    ->             SET fact = fact * i;
+    ->             SET i = i + 1;
+    ->         END WHILE;
+    -> 
+    ->         SELECT fact AS Factorial;
+    ->     END IF;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL FindFactorial(5);
++-----------+
+| Factorial |
++-----------+
+|       120 |
++-----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELIMITER //
+mysql> CREATE PROCEDURE FindGrade(IN mark INT)
+    -> BEGIN
+    -> DECLARE grade CHAR(1);
+    -> IF mark>=90 THEN
+    -> SET grade ='A';
+    -> ELSEIF mark >=80 THEN
+    -> set grade='B';
+    -> ELSEIF mark>=70 THEN
+    -> set grade='c';
+    -> ELSEIF mark>=60 THEN
+    -> SET grade='D';
+    -> else
+    -> set grade='F';
+    -> end if;
+    -> select grade as Grade;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DELIMITER ;
+mysql> CALL FindGrade(85);
++-------+
+| Grade |
++-------+
+| B     |
++-------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE ReverseNumber(
+    ->     IN num INT
+    -> )
+    -> BEGIN
+    ->     DECLARE reversed INT DEFAULT 0;
+    ->     DECLARE remainder INT;
+    -> 
+    ->     WHILE num > 0 DO
+    ->         SET remainder = num % 10;
+    ->         SET reversed = (reversed * 10) + remainder;
+    ->         SET num = FLOOR(num / 10);
+    ->     END WHILE;
+    -> 
+    ->     SELECT reversed AS Reversed_Number;
+    -> END //
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL RvereseNumber(1234);
+ERROR 1305 (42000): PROCEDURE exp6.RvereseNumber does not exist
+mysql> CALL RevereseNumber(1234);
+ERROR 1305 (42000): PROCEDURE exp6.RevereseNumber does not exist
+mysql> CALL ReverseNumber(1234);
++-----------------+
+| Reversed_Number |
++-----------------+
+|            4321 |
++-----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE SumOfSeries(
+    ->     IN n INT
+    -> )
+    -> BEGIN
+    ->     DECLARE i INT DEFAULT 1;
+    ->     DECLARE total INT DEFAULT 0;
+    -> 
+    ->     IF n < 1 THEN
+    ->         SELECT 'Enter a positive integer' AS Result;
+    ->     ELSE
+    ->         WHILE i <= n DO
+    ->             SET total = total + i;
+    ->             SET i = i + 1;
+    ->         END WHILE;
+    -> 
+    ->         SELECT total AS Sum_of_Series;
+    ->     END IF;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> call SumOfSeries(5);
++---------------+
+| Sum_of_Series |
++---------------+
+|            15 |
++---------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE WithdrawAmount(
+    ->     IN p_account_id INT,
+    ->     IN p_amount DECIMAL(10,2)
+    -> )
+    -> BEGIN
+    ->     DECLARE current_balance DECIMAL(10,2);
+    -> 
+    ->     -- Check if account exists
+    ->     SELECT balance INTO current_balance
+    ->     FROM accounts
+    ->     WHERE account_id = p_account_id;
+    -> 
+    ->     IF current_balance IS NULL THEN
+    ->         SELECT 'Account does not exist' AS Message;
+    -> 
+    ->     ELSEIF (current_balance - p_amount) < 1000 THEN
+    ->         SELECT 'Insufficient balance. Minimum balance of 1000 must be maintained.' AS Message;
+    -> 
+    ->     ELSE
+    ->         UPDATE accounts
+    ->         SET balance = balance - p_amount
+    ->         WHERE account_id = p_account_id;
+    -> 
+    ->         SELECT 'Withdrawal successful' AS Message,
+    ->                (current_balance - p_amount) AS New_Balance;
+    ->     END IF;
+    -> 
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL WithdrawAmount(101, 500);
+ERROR 1146 (42S02): Table 'exp6.accounts' doesn't exist
+mysql> create table accounts(account_id int primary key,balance int);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into accounts values(101,10000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into accounts values(102,4000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into accounts values(103,15000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into accounts values(104,1000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE WithdrawAmount(
+    ->     IN p_account_id INT,
+    ->     IN p_amount DECIMAL(10,2)
+    -> )
+    -> BEGIN
+    ->     DECLARE current_balance DECIMAL(10,2);
+    -> 
+    ->     -- Get current balance
+    ->     SELECT balance INTO current_balance
+    ->     FROM accounts
+    ->     WHERE account_id = p_account_id;
+    -> 
+    ->     -- Check if account exists
+    ->     IF current_balance IS NULL THEN
+    ->         SELECT 'Account does not exist' AS Message;
+    -> 
+    ->     -- Check minimum balance condition
+    ->     ELSEIF (current_balance - p_amount) < 1000 THEN
+    ->         SELECT 'Withdrawal denied. Minimum balance of 1000 must be maintained.' AS Message;
+    -> 
+    ->     -- Perform withdrawal
+    ->     ELSE
+    ->         UPDATE accounts
+    ->         SET balance = balance - p_amount
+    ->         WHERE account_id = p_account_id;
+    -> 
+    ->         SELECT 'Withdrawal successful' AS Message,
+    ->                (current_balance - p_amount) AS New_Balance;
+    ->     END IF;
+    -> 
+    -> END //
+ERROR 1304 (42000): PROCEDURE WithdrawAmount already exists
+mysql> 
+mysql> CREATE PROCEDURE WithdrawalAmount(     IN p_account_id INT,     IN p_amount DECIMAL(10,2) ) BEGIN
+  DECLARE current_balance DECIMAL(10,2);           SELECT balance INTO current_balance     FROM accounts
+  WHERE account_id = p_account_id;           IF current_balance IS NULL THEN         SELECT 'Account does not exist' AS Message;           ELSEIF (current_balance - p_amount) < 1000 THEN         SELECT 'Withdrawal
+denied. Minimum balance of 1000 must be maintained.' AS Message;           ELSE         UPDATE accounts
+     SET balance = balance - p_amount         WHERE account_id = p_account_id;          SELECT 'Withdrawal
+successful' AS Message,                (current_balance - p_amount) AS New_Balance;     END IF;  END//
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> DELIMITER;
+    -> CREATE PROCEDURE WithdrawalAmount(     IN p_account_id INT,     IN p_amount DECIMAL(10,2) ) BEGIN
+  DECLARE current_balance DECIMAL(10,2);           SELECT balance INTO current_balance     FROM accounts
+  WHERE account_id = p_account_id;           IF current_balance IS NULL THEN         SELECT 'Account does not exist' AS Message;           ELSEIF (current_balance - p_amount) < 1000 THEN         SELECT 'Withdrawal
+denied. Minimum balance of 1000 must be maintained.' AS Message;           ELSE         UPDATE accounts
+     SET balance = balance - p_amount         WHERE account_id = p_account_id;          SELECT 'Withdrawal
+successful' AS Message,                (current_balance - p_amount) AS New_Balance;     END IF;  END//
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DELIMITER;CREATE PROCEDURE WithdrawalAmount(     IN p_account_id INT,     IN p_a' at line 1
+mysql> DELIMITER ;
+mysql> CALL WithdrawalAmount(103,5000);
++-----------------------+-------------+
+| Message               | New_Balance |
++-----------------------+-------------+
+| Withdrawal successful |    10000.00 |
++-----------------------+-------------+
+1 row in set (0.03 sec)
+
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE FUNCTION SumOfDigits(num INT)
+    -> RETURNS INT
+    -> DETERMINISTIC
+    -> BEGIN
+    ->     DECLARE sum INT DEFAULT 0;
+    ->     DECLARE remainder INT;
+    -> 
+    ->     -- Handle negative numbers
+    ->     SET num = ABS(num);
+    -> 
+    ->     WHILE num > 0 DO
+    ->         SET remainder = num % 10;
+    ->         SET sum = sum + remainder;
+    ->         SET num = FLOOR(num / 10);
+    ->     END WHILE;
+    -> 
+    ->     RETURN sum;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> select SumOfDigits(1234) as Sum_of_Digits;
++---------------+
+| Sum_of_Digits |
++---------------+
+|            10 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> create table employees(emp_id int primary key,salary int);
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> insert into employees values(10,100000000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employees values(07,50000000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into employees values(19,1900000000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE FUNCTION GetEmployeeSalary(p_emp_id INT)
+    -> RETURNS DECIMAL(10,2)
+    -> DETERMINISTIC
+    -> READS SQL DATA
+    -> BEGIN
+    ->     DECLARE emp_salary DECIMAL(10,2);
+    -> 
+    ->     SELECT salary INTO emp_salary
+    ->     FROM employees
+    ->     WHERE emp_id = p_emp_id;
+    -> 
+    ->     RETURN emp_salary;
+    -> END //
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> select GetEmployeeSalary(19) as salary;
+ERROR 1264 (22003): Out of range value for column 'emp_salary' at row 1
+mysql> insert into employees values(101,1000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into employees values(102,2000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into employees values(103,4000);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE FUNCTION GetEmployeeSalary(p_emp_id INT)
+    -> RETURNS DECIMAL(10,2)
+    -> DETERMINISTIC
+    -> READS SQL DATA
+    -> BEGIN
+    ->     DECLARE emp_salary DECIMAL(10,2);
+    -> 
+    ->     SELECT salary INTO emp_salary
+    ->     FROM employees
+    ->     WHERE emp_id = p_emp_id;
+    -> 
+    ->     RETURN emp_salary;
+    -> END //
+ERROR 1304 (42000): FUNCTION GetEmployeeSalary already exists
+mysql> 
+mysql> CREATE FUNCTION GetEmployeSalary(p_emp_id INT) RETURNS DECIMAL(10,2) DETERMINISTIC READS SQL DATA BEGIN     DECLARE emp_salary DECIMAL(10,2);      SELECT salary INTO emp_salary     FROM employees     WHERE emp_id = p_emp_id;      RETURN emp_salary; END//
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DELIMITER ;
+mysql> SELECT GetEmployeSalary(101) AS Salary;
++---------+
+| Salary  |
++---------+
+| 1000.00 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> 
+

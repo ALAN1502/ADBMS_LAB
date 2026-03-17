@@ -1,0 +1,240 @@
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~/Alan johny/DBMS$ sudo mysql
+[sudo] password for mca: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.45-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database quest7;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use quest7;
+Database changed
+mysql> CREATE TABLE employees (
+    ->     emp_no INT,
+    ->     name VARCHAR(20),
+    ->     salary DECIMAL(10,2)
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO employees VALUES (1,'ALAN',10000);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO employees VALUES (2,'AJ',35000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO employees VALUES (3,'UNNI',25000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO employees VALUES (4,'AU',20000);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO employees VALUES (5,'UA',34000);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> SELECT * FROM employees;
++--------+------+----------+
+| emp_no | name | salary   |
++--------+------+----------+
+|      1 | ALAN | 10000.00 |
+|      2 | AJ   | 35000.00 |
+|      3 | UNNI | 25000.00 |
+|      4 | AU   | 20000.00 |
+|      5 | UA   | 34000.00 |
++--------+------+----------+
+5 rows in set (0.00 sec)
+
+mysql> DELIMITER //
+mysql> 
+mysql> CREATE PROCEDURE salary_increment()
+    -> BEGIN
+    ->     DECLARE done INT DEFAULT 0;
+    ->     DECLARE v_no INT;
+    ->     DECLARE v_salary DECIMAL(10,2);
+    -> 
+    ->     DECLARE emp_cursor CURSOR FOR
+    ->         SELECT emp_no, salary FROM employees WHERE salary < 30000;
+    -> 
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    -> 
+    ->     OPEN emp_cursor;
+    -> 
+    ->     read_loop: LOOP
+    ->         FETCH emp_cursor INTO v_no, v_salary;
+    -> 
+    ->         IF done = 1 THEN
+    ->             LEAVE read_loop;
+    ->         END IF;
+    -> 
+    ->         UPDATE employees
+    ->         SET salary = salary + (salary * 0.10)
+    ->         WHERE emp_no = v_no;
+    -> 
+    ->     END LOOP;
+    -> 
+    ->     CLOSE emp_cursor;
+    -> END //
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> CALL salary_increment();
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT * FROM employees;
++--------+------+----------+
+| emp_no | name | salary   |
++--------+------+----------+
+|      1 | ALAN | 11000.00 |
+|      2 | AJ   | 35000.00 |
+|      3 | UNNI | 27500.00 |
+|      4 | AU   | 22000.00 |
+|      5 | UA   | 34000.00 |
++--------+------+----------+
+5 rows in set (0.00 sec)
+
+mysql> -- Table to store customer details and their consumption
+mysql> CREATE TABLE customers (
+    ->     customer_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     customer_name VARCHAR(100),
+    ->     units_consumed INT NOT NULL
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> 
+mysql> -- Table to store calculated bills
+mysql> CREATE TABLE bills (
+    ->     bill_id INT PRIMARY KEY AUTO_INCREMENT,
+    ->     customer_id INT,
+    ->     amount DECIMAL(10,2),
+    ->     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+    -> );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO customers (customer_name, units_consumed) VALUES
+    -> ('Alice', 80),     -- falls in first slab
+    -> ('Bob', 150),      -- falls in second slab
+    -> ('Charlie', 250),  -- falls in third slab
+    -> ('David', 400);    -- above 300 units
+Query OK, 4 rows affected (0.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> DELIMITER $$
+mysql> 
+mysql> CREATE PROCEDURE CalculateElectricityBills()
+    -> BEGIN
+    ->     DECLARE done INT DEFAULT 0;
+    ->     DECLARE cust_id INT;
+    ->     DECLARE units INT;
+    ->     DECLARE bill DECIMAL(10,2);
+    -> 
+    ->     -- Cursor to fetch customer id and units consumed
+    ->     DECLARE cur CURSOR FOR 
+    ->         SELECT customer_id, units_consumed FROM customers;
+    -> 
+    ->     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+    -> 
+    ->     OPEN cur;
+    -> 
+    ->     read_loop: LOOP
+    ->         FETCH cur INTO cust_id, units;
+    ->         IF done = 1 THEN
+    ->             LEAVE read_loop;
+    ->         END IF;
+    -> 
+    ->         -- Calculate bill based on slabs
+    ->         IF units <= 100 THEN
+    ->             SET bill = units * 2.00;
+    ->         ELSEIF units <= 200 THEN
+    ->             SET bill = (100 * 2.00) + ((units - 100) * 2.50);
+    ->         ELSEIF units <= 300 THEN
+    ->             SET bill = (100 * 2.00) + (100 * 2.50) + ((units - 200) * 3.00);
+    ->         ELSE
+    ->             SET bill = (100 * 2.00) + (100 * 2.50) + (100 * 3.00) + ((units - 300) * 4.00);
+    ->         END IF;
+    -> 
+    ->         -- Store the bill in a separate table
+    ->         INSERT INTO bills(customer_id, amount) VALUES (cust_id, bill);
+    ->     END LOOP;
+    -> 
+    ->     CLOSE cur;
+    -> END$$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> DELIMITER ;
+mysql> call CalculateElectricityBills();
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> select * from customers;
++-------------+---------------+----------------+
+| customer_id | customer_name | units_consumed |
++-------------+---------------+----------------+
+|           1 | Alice         |             80 |
+|           2 | Bob           |            150 |
+|           3 | Charlie       |            250 |
+|           4 | David         |            400 |
++-------------+---------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from bills;
++---------+-------------+---------+
+| bill_id | customer_id | amount  |
++---------+-------------+---------+
+|       1 |           1 |  160.00 |
+|       2 |           2 |  325.00 |
+|       3 |           3 |  600.00 |
+|       4 |           4 | 1150.00 |
++---------+-------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> TRUNCATE TABLE bills;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> CALL CalculateElectricityBills();
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select * from bills;
++---------+-------------+---------+
+| bill_id | customer_id | amount  |
++---------+-------------+---------+
+|       1 |           1 |  160.00 |
+|       2 |           2 |  325.00 |
+|       3 |           3 |  600.00 |
+|       4 |           4 | 1150.00 |
++---------+-------------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select * from customers;
++-------------+---------------+----------------+
+| customer_id | customer_name | units_consumed |
++-------------+---------------+----------------+
+|           1 | Alice         |             80 |
+|           2 | Bob           |            150 |
+|           3 | Charlie       |            250 |
+|           4 | David         |            400 |
++-------------+---------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT c.customer_name, c.units_consumed, b.amount AS bill_amount
+    -> FROM customers c
+    -> JOIN bills b ON c.customer_id = b.customer_id;
++---------------+----------------+-------------+
+| customer_name | units_consumed | bill_amount |
++---------------+----------------+-------------+
+| Alice         |             80 |      160.00 |
+| Bob           |            150 |      325.00 |
+| Charlie       |            250 |      600.00 |
+| David         |            400 |     1150.00 |
++---------------+----------------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> 
+

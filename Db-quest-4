@@ -1,0 +1,404 @@
+mca@mca-HP-Pro-Tower-280-G9-E-PCI-Desktop-PC:~$ sudo mysql
+[sudo] password for mca: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.45-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2026, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database exp4;
+Query OK, 1 row affected (0.03 sec)
+
+mysql> use exp4;
+Database changed
+mysql> create table employee(emp_id int(10),emp_name varchar(15),designation varchar(18),dept_id int(20),salary int(20),joining_date date);
+Query OK, 0 rows affected, 3 warnings (0.04 sec)
+
+mysql> desc employee;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| emp_id       | int         | YES  |     | NULL    |       |
+| emp_name     | varchar(15) | YES  |     | NULL    |       |
+| designation  | varchar(18) | YES  |     | NULL    |       |
+| dept_id      | int         | YES  |     | NULL    |       |
+| salary       | int         | YES  |     | NULL    |       |
+| joining_date | date        | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> create table department(dept_id int(10),dept_name varchar(20));
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+mysql> desc department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_id   | int         | YES  |     | NULL    |       |
+| dept_name | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> insert into employee values(110,'Anita','Typist',1,10000,2000-03-02);
+ERROR 1292 (22007): Incorrect date value: '1995' for column 'joining_date' at row 1
+mysql> insert into employee values(110,'Anita','Typist',1,10000,'2000-03-02');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employee values(111,'Veena','Analyst',2,28000,'2001-02-02');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into employee values(112,'Mariya','Manager',3,40000,'2000-03-02');
+
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into employee values(113,'Geethu','Typist',4,5000,'2001-03-02');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employee values(114,'Joseph','clerk',3,20000,'2002-03-02');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into employee values(115,'Alen','Manager',3,42000,'2003-03-02');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into employee values(116,'Anu','Analyst',2,30000,'2003-03-02');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from employee;
++--------+----------+-------------+---------+--------+--------------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date |
++--------+----------+-------------+---------+--------+--------------+
+|    110 | Anita    | Typist      |       1 |  10000 | 2000-03-02   |
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |
+|    112 | Mariya   | Manager     |       3 |  40000 | 2000-03-02   |
+|    113 | Geethu   | Typist      |       4 |   5000 | 2001-03-02   |
+|    114 | Joseph   | clerk       |       3 |  20000 | 2002-03-02   |
+|    115 | Alen     | Manager     |       3 |  42000 | 2003-03-02   |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |
++--------+----------+-------------+---------+--------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> update employee set dept_id=1 where emp
+    -> ^C
+mysql> update employee set dept_id=1 where emp_id=112;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update employee set dept_id=2 where emp_id=113;
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employee;
++--------+----------+-------------+---------+--------+--------------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date |
++--------+----------+-------------+---------+--------+--------------+
+|    110 | Anita    | Typist      |       1 |  10000 | 2000-03-02   |
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |
+|    112 | Mariya   | Manager     |       1 |  40000 | 2000-03-02   |
+|    113 | Geethu   | Typist      |       2 |   5000 | 2001-03-02   |
+|    114 | Joseph   | clerk       |       3 |  20000 | 2002-03-02   |
+|    115 | Alen     | Manager     |       3 |  42000 | 2003-03-02   |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |
++--------+----------+-------------+---------+--------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> insert into department values(1,'HR');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into department values(2,'IT');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into department values(3,'Finance');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into department values(4,'Admin');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into department values(5,'Sales');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from department;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | HR        |
+|       2 | IT        |
+|       3 | Finance   |
+|       4 | Admin     |
+|       5 | Sales     |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee;
++--------+----------+-------------+---------+--------+--------------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date |
++--------+----------+-------------+---------+--------+--------------+
+|    110 | Anita    | Typist      |       1 |  10000 | 2000-03-02   |
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |
+|    112 | Mariya   | Manager     |       1 |  40000 | 2000-03-02   |
+|    113 | Geethu   | Typist      |       2 |   5000 | 2001-03-02   |
+|    114 | Joseph   | clerk       |       3 |  20000 | 2002-03-02   |
+|    115 | Alen     | Manager     |       3 |  42000 | 2003-03-02   |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |
++--------+----------+-------------+---------+--------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> alter table employee add constraint fk_dept foreign key(dept_id) REFERENCES department(dept_id);
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'fk_dept' in the referenced table 'department'
+mysql> ALTER TABLE employee
+    -> ADD CONSTRAINT fk_dept
+    -> FOREIGN KEY (dept_id)
+    -> REFERENCES department(dept_id)
+    -> ON DELETE CASCADE
+    -> ON UPDATE CASCADE;
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'fk_dept' in the referenced table 'department'
+mysql> ALTER TABLE department
+    -> ADD PRIMARY KEY (dept_id);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE employee
+    -> ADD CONSTRAINT fk_dept
+    -> FOREIGN KEY (dept_id)
+    -> REFERENCES department(dept_id)
+    -> ON DELETE CASCADE
+    -> ON UPDATE CASCADE;
+Query OK, 7 rows affected (0.09 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from employee;
++--------+----------+-------------+---------+--------+--------------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date |
++--------+----------+-------------+---------+--------+--------------+
+|    110 | Anita    | Typist      |       1 |  10000 | 2000-03-02   |
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |
+|    112 | Mariya   | Manager     |       1 |  40000 | 2000-03-02   |
+|    113 | Geethu   | Typist      |       2 |   5000 | 2001-03-02   |
+|    114 | Joseph   | clerk       |       3 |  20000 | 2002-03-02   |
+|    115 | Alen     | Manager     |       3 |  42000 | 2003-03-02   |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |
++--------+----------+-------------+---------+--------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from department;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | HR        |
+|       2 | IT        |
+|       3 | Finance   |
+|       4 | Admin     |
+|       5 | Sales     |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> desc employee;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| emp_id       | int         | YES  |     | NULL    |       |
+| emp_name     | varchar(15) | YES  |     | NULL    |       |
+| designation  | varchar(18) | YES  |     | NULL    |       |
+| dept_id      | int         | YES  | MUL | NULL    |       |
+| salary       | int         | YES  |     | NULL    |       |
+| joining_date | date        | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> desc department;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dept_id   | int         | NO   | PRI | NULL    |       |
+| dept_name | varchar(20) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> select e.emp_name,d.dept_name from employee e join department d on e.dept_id=d.dept_id;
++----------+-----------+
+| emp_name | dept_name |
++----------+-----------+
+| Anita    | HR        |
+| Veena    | IT        |
+| Mariya   | HR        |
+| Geethu   | IT        |
+| Joseph   | Finance   |
+| Alen     | Finance   |
+| Anu      | IT        |
++----------+-----------+
+7 rows in set (0.00 sec)
+
+mysql> select d.dept_name from employee e join department d on e.dept_id=d.dept_id where e.emp_name='Geethu';
++-----------+
+| dept_name |
++-----------+
+| IT        |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select e.salary from employee e join department d on e.dept_id=d.dept_id where d.dept_name='HR';
++--------+
+| salary |
++--------+
+|  10000 |
+|  40000 |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee mysql> ALTER TABLE employee
+    ->     -> ADD CONSTRAINT fk_dept
+    ->     -> FOREIGN KEY (dept_id)
+    ->     -> REFERENCES department(dept_id)
+    ->     -> ON DELETE CASCADE
+    ->     -> ON UPDATE CASCADE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '> ALTER TABLE employee
+    -> ADD CONSTRAINT fk_dept
+    -> FOREIGN KEY (dept_id' at line 1
+mysql> ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'fk_dept' in the referenced table 'department'mysql> ALTER TABLE employee
+    ->     -> ADD CONSTRAINT fk_dept
+    ->     -> FOREIGN KEY (dept_id)
+    ->     -> REFERENCES department(dept_id)
+    ->     -> ON DELETE CASCADE
+    ->     -> ON UPDATE CASCADE;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for ' at line 1
+mysql> select * from employee
+    -> ^C
+mysql> select * from employee;
++--------+----------+-------------+---------+--------+--------------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date |
++--------+----------+-------------+---------+--------+--------------+
+|    110 | Anita    | Typist      |       1 |  10000 | 2000-03-02   |
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |
+|    112 | Mariya   | Manager     |       1 |  40000 | 2000-03-02   |
+|    113 | Geethu   | Typist      |       2 |   5000 | 2001-03-02   |
+|    114 | Joseph   | clerk       |       3 |  20000 | 2002-03-02   |
+|    115 | Alen     | Manager     |       3 |  42000 | 2003-03-02   |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |
++--------+----------+-------------+---------+--------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from department;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | HR        |
+|       2 | IT        |
+|       3 | Finance   |
+|       4 | Admin     |
+|       5 | Sales     |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee e join department d on e.dept_id=d.dept_id where e.designation='Analyst' and d.dept_name='IT';
++--------+----------+-------------+---------+--------+--------------+---------+-----------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date | dept_id | dept_name |
++--------+----------+-------------+---------+--------+--------------+---------+-----------+
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |       2 | IT        |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |       2 | IT        |
++--------+----------+-------------+---------+--------+--------------+---------+-----------+
+2 rows in set (0.00 sec)
+
+mysql> select e.salary from employee e join department d on e.dept_id=d.dept_id
+where d.dept_name='Finance';
++--------+
+| salary |
++--------+
+|  20000 |
+|  42000 |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee e join department d on e.dept_id=d.dept_id where d.dept_name not in('Finance','HR');
++--------+----------+-------------+---------+--------+--------------+---------+-----------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date | dept_id | dept_name |
++--------+----------+-------------+---------+--------+--------------+---------+-----------+
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |       2 | IT        |
+|    113 | Geethu   | Typist      |       2 |   5000 | 2001-03-02   |       2 | IT        |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |       2 | IT        |
++--------+----------+-------------+---------+--------+--------------+---------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select d.dept_name from employee e join department d on e.dept_id=d.dept_
+id where e.salary=(select max(salary) from employee);;
++-----------+
+| dept_name |
++-----------+
+| Finance   |
++-----------+
+1 row in set (0.00 sec)
+
+ERROR: 
+No query specified
+
+mysql> select d.dept_name from employee e join department d on e.dept_id=d.dept_id where e.salary=(select max(salary) from employee);
++-----------+
+| dept_name |
++-----------+
+| Finance   |
++-----------+
+1 row in set (0.00 sec)
+
+mysql> select * from employee;
++--------+----------+-------------+---------+--------+--------------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date |
++--------+----------+-------------+---------+--------+--------------+
+|    110 | Anita    | Typist      |       1 |  10000 | 2000-03-02   |
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |
+|    112 | Mariya   | Manager     |       1 |  40000 | 2000-03-02   |
+|    113 | Geethu   | Typist      |       2 |   5000 | 2001-03-02   |
+|    114 | Joseph   | clerk       |       3 |  20000 | 2002-03-02   |
+|    115 | Alen     | Manager     |       3 |  42000 | 2003-03-02   |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |
++--------+----------+-------------+---------+--------+--------------+
+7 rows in set (0.00 sec)
+
+mysql> select * from department;;
++---------+-----------+
+| dept_id | dept_name |
++---------+-----------+
+|       1 | HR        |
+|       2 | IT        |
+|       3 | Finance   |
+|       4 | Admin     |
+|       5 | Sales     |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+ERROR: 
+No query specified
+
+mysql> select dept_id from employee group by dept_id having count(*)=(select min(cnt)from(select count(*) cnt from employee group by dept_id)X);
++---------+
+| dept_id |
++---------+
+|       1 |
+|       3 |
++---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from employee e where salary>(select avg(salary) from employee e where dept_id=e.dept_id);
++--------+----------+-------------+---------+--------+--------------+
+| emp_id | emp_name | designation | dept_id | salary | joining_date |
++--------+----------+-------------+---------+--------+--------------+
+|    111 | Veena    | Analyst     |       2 |  28000 | 2001-02-02   |
+|    112 | Mariya   | Manager     |       1 |  40000 | 2000-03-02   |
+|    115 | Alen     | Manager     |       3 |  42000 | 2003-03-02   |
+|    116 | Anu      | Analyst     |       2 |  30000 | 2003-03-02   |
++--------+----------+-------------+---------+--------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select dept_id,count(*) as number_of_dept_employees from employee group by dept_id having count(*)>2;
++---------+--------------------------+
+| dept_id | number_of_dept_employees |
++---------+--------------------------+
+|       2 |                        3 |
++---------+--------------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+
